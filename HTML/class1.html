@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Example</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        .center-container {
+            display: flex;
+            flex-direction: column; /* 수직 방향으로 정렬 */
+            justify-content: flex-start; /* 상단에 가까운 중앙으로 정렬 */
+            align-items: center;
+            height: 100vh; /* 화면 전체 높이 */
+            text-align: center;
+            padding-top: 120px; /* 상단 여백 추가 */
+            position: relative; /* 자식 요소에 절대 위치를 설정할 수 있도록 */
+        }
+
+        .center-container h1 {
+            margin-bottom: 10px; /* <h1>와 <h6> 사이의 간격을 줄입니다. */
+        }
+
+        .center-container h6 {
+            margin-top: 0; /* 기본 상단 여백 제거 */
+            margin-bottom: 20px; /* <h6>와 다른 요소 사이의 간격을 조정 */
+        }
+
+        .center-container img {
+            position: absolute;
+            bottom: 150px; /* (이미지 위치 조정-크게하면 올라옴, px는 가장 작은 단위고 그냥 숫자로 하면 변동이 큼)*/
+            right: 20px;  /* 부모 요소의 오른쪽에 맞춤 */
+            width: 300px; /* 이미지의 너비 설정(이미지 자르는 역할) */
+            height: 400px; /* 이미지의 높이 설정 */
+            object-fit: cover; /* 이미지 비율 유지 */
+        }
+    </style>
+</head>
+<body>
+    <div class="center-container">
+        <!-- Heading(제목) -->
+        <h1>나의 하루 일과</h1> <!-- 가장 큰 글씨 -->
+        <h5>오늘부터 시작하자</h5> <!-- 가장 작은 글씨 / 더 작거나 큰 글씨를 원한다면 CSS 스타일로 해야 함 -->
+        <img src="cat.png" alt="설명 텍스트">
+    </div>
+</body>
+</html>
+ㄴ
+
+
