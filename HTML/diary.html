@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>일기 쓰기</title>
+    <style>
+        .container { /*이미지 위치*/
+            position: relative;
+            width: 1000px;
+            margin-left:0%;
+        }
+
+        .line-image {
+            position: absolute;
+            top: 12px; /* 이미지의 상단 위치 조정 */
+            left: 66%; /* 이미지의 좌측 위치 조정 */
+            width: 25px;
+            height: 95%;
+            filter: saturate(50%); /* 필터 추가 */
+        }
+
+        .image-box {
+            position: absolute;
+            top: 6%;
+            left: 52%;
+            width: 200px; /* 네모박스 너비 */
+            height: 200px; /* 네모박스 높이 */
+            border: 2px dashed #69b6d77d; /* 네모박스 테두리 */
+            margin: 20px auto; /* 네모박스 중앙 정렬 */
+            overflow: hidden; /* 네모박스 밖으로 나가는 부분 숨기기 */
+            display: flex; /* 플렉스 컨테이너로 설정 */
+            align-items: center; /* 세로 중앙 정렬 */
+            justify-content: center; /* 가로 중앙 정렬 */
+        }
+
+        .image-box img {
+            width: 80%;
+            height: 80%;
+            object-fit:contain; /* 이미지가 네모박스에 맞춰짐 */
+        }
+
+        .upload-btn-wrapper { /*버튼 위치 설정*/
+            position: absolute;
+            top: 39%;
+            left: 57%;
+        }
+
+        .upload-btn-wrapper input[type="file"] {
+            display: none;
+        }
+
+        .upload-btn { /*버튼 스타일 지정*/
+            background-color: #505a50c4;
+            color: white;
+            padding: 10px 20px;
+            font-size: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        img { /*이미지 미리보기*/
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img class="background-img" src="빈 일기.jpg" alt="배경 이미지">
+        <div class="image-box">
+            <img id="display-image" src="#" alt="이미지">
+        </div>
+        <div class="upload-btn-wrapper">
+            <button class="upload-btn">사진 업로드</button>
+            <input type="file" id="image-upload" accept="image/*">
+        </div>
+    </div>
+    <img class="line-image" src="선.png" alt="이미지 설명">
+
+    <script>
+        document.getElementById('image-upload').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('display-image').src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.querySelector('.upload-btn').addEventListener('click', function() {
+            document.getElementById('image-upload').click();
+        });
+    </script>
+</body>
+</html>
