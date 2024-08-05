@@ -5,42 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>일기 쓰기</title>
     <style>
-        .container { /*이미지 위치*/
+        .container {
             position: relative;
             width: 1000px;
-            margin-left:0%;
+            margin-left: 0;
         }
 
         .line-image {
             position: absolute;
-            top: 12px; /* 이미지의 상단 위치 조정 */
-            left: 66%; /* 이미지의 좌측 위치 조정 */
+            top: 12px;
+            left: 66%;
             width: 25px;
             height: 95%;
-            filter: saturate(50%); /* 필터 추가 */
+            filter: saturate(50%);
         }
 
         .image-box {
             position: absolute;
             top: 6%;
             left: 52%;
-            width: 200px; /* 네모박스 너비 */
-            height: 200px; /* 네모박스 높이 */
-            border: 2px dashed #69b6d77d; /* 네모박스 테두리 */
-            margin: 20px auto; /* 네모박스 중앙 정렬 */
-            overflow: hidden; /* 네모박스 밖으로 나가는 부분 숨기기 */
-            display: flex; /* 플렉스 컨테이너로 설정 */
-            align-items: center; /* 세로 중앙 정렬 */
-            justify-content: center; /* 가로 중앙 정렬 */
+            width: 200px;
+            height: 200px;
+            border: 2px dashed #69b6d77d;
+            margin: 20px auto;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .image-box img {
             width: 80%;
             height: 80%;
-            object-fit:contain; /* 이미지가 네모박스에 맞춰짐 */
+            object-fit: contain;
         }
 
-        .upload-btn-wrapper { /*버튼 위치 설정*/
+        .upload-btn-wrapper {
             position: absolute;
             top: 39%;
             left: 57%;
@@ -50,7 +50,7 @@
             display: none;
         }
 
-        .upload-btn { /*버튼 스타일 지정*/
+        .upload-btn {
             background-color: #505a50c4;
             color: white;
             padding: 10px 20px;
@@ -60,11 +60,132 @@
             cursor: pointer;
         }
 
-        img { /*이미지 미리보기*/
+        img {
             width: 100%;
             height: auto;
             display: block;
         }
+
+        .editable-container {
+            position: absolute;
+            top: 8%;
+            left: 74%;
+            width: 25%; /* 컨테이너의 너비 조정 */
+        }
+
+        .editable-container1 {
+            position: absolute;
+            top: 45%; /* 다른 위치로 조정 */
+            left: 52%;
+            width: 46%; /* 컨테이너의 너비 조정 */
+        }
+
+        .editable-container2 {
+            position: absolute;
+            top: 70%; /* 다른 위치로 조정 */
+            left: 52%;
+            width: 47%; /* 컨테이너의 너비 조정 */
+        }
+
+        .editable-line, .editable-line1, .editable-line2 {
+            width: 100%;
+            border-bottom: 2.6px solid #587aa296;
+            font-size: 16px;
+            padding: 2px 0;
+            outline: none;
+            white-space: nowrap; /* 줄 바꿈 불가 */
+            overflow: hidden; /* 넘치는 텍스트 숨기기 */
+            text-overflow: ellipsis; /* 텍스트 넘칠 때 생략 기호 */
+        }
+
+        .editable-container3 {
+            position: absolute;
+            top: 79%; /* 다른 위치로 조정 */
+            left: 3%;
+            width: 18%; /* 컨테이너의 너비 조정 */
+        }
+
+        .editable-container4 {
+            position: absolute;
+            top: 79%; /* 다른 위치로 조정 */
+            left: 26%;
+            width: 18%; /* 컨테이너의 너비 조정 */
+        }
+
+        .editable-line3,.editable-line4 {
+            width: 100%;
+            border-bottom: 2px solid #989b9f85;
+            font-size: 16px;
+            padding: 2px 0;
+            outline: none;
+            white-space: nowrap; /* 줄 바꿈 불가 */
+            overflow: hidden; /* 넘치는 텍스트 숨기기 */
+            text-overflow: ellipsis; /* 텍스트 넘칠 때 생략 기호 */
+        }
+
+        .editable-container5 {
+            position: absolute;
+            top: 10.4%; /* 다른 위치로 조정 */
+            left: 27.3%;
+            width: 17.5%; /* 컨테이너의 너비 조정 */
+        }
+        .editable-container6 {
+            position: absolute;
+            top: 32.7%; /* 다른 위치로 조정 */
+            left: 24.3%;
+            width: 21.7%; /* 컨테이너의 너비 조정 */
+        }
+        .editable-container7 {
+            position: absolute;
+            top: 41%; /* 다른 위치로 조정 */
+            left: 1.8%;
+            width: 21.7%; /* 컨테이너의 너비 조정 */
+        }
+        .editable-container8 {
+            position: absolute;
+            top: 58%; /* 다른 위치로 조정 */
+            left: 1.8%;
+            width: 21.7%; /* 컨테이너의 너비 조정 */
+        }
+        .editable-container9 {
+            position: absolute;
+            top: 45.5%; /* 다른 위치로 조정 */
+            left: 24.3%;
+            width: 21.7%; /* 컨테이너의 너비 조정 */
+        }
+
+        .editable-container10 {
+            position: absolute;
+            top: 62.3%; /* 다른 위치로 조정 */
+            left: 24.3%;
+            width: 21.7%; /* 컨테이너의 너비 조정 */
+        }
+
+        .editable-line5, .editable-line6, .editable-line7,.editable-line8,.editable-line9,.editable-line10 {
+            width: 100%;
+            border-bottom: 2.6px solid #466e9c6e;
+            font-size: 16px;
+            padding: 2px 0;
+            outline: none;
+            white-space: nowrap; /* 줄 바꿈 불가 */
+            overflow: hidden; /* 넘치는 텍스트 숨기기 */
+            text-overflow: ellipsis; /* 텍스트 넘칠 때 생략 기호 */
+        }
+
+
+        .editable-line { margin-top: 5px; } /* 줄 사이 간격 조정 */
+        .editable-line1 { margin-top: 10px; } /* 줄 사이 간격 조정 */
+        .editable-line2 { margin-top: 10px; } /* 줄 사이 간격 조정 */
+        .editable-line3 { margin-top: 3px; } /* 줄 사이 간격 조정 */
+        .editable-line4 { margin-top: 2px; } /* 줄 사이 간격 조정 */
+        .editable-line5 { margin-top: 6.4px; } /* 줄 사이 간격 조정 */
+        .editable-line6 { margin-top: 1.5px; } /* 줄 사이 간격 조정 */
+        .editable-line7 { margin-top: 1.5px; } /* 줄 사이 간격 조정 */
+        .editable-line8 { margin-top: 1.5px; } /* 줄 사이 간격 조정 */
+        .editable-line9 { margin-top: 1.5px; } /* 줄 사이 간격 조정 */
+        .editable-line10 { margin-top: 1.5px; } /* 줄 사이 간격 조정 */
+
+
     </style>
 </head>
 <body>
@@ -76,6 +197,81 @@
         <div class="upload-btn-wrapper">
             <button class="upload-btn">사진 업로드</button>
             <input type="file" id="image-upload" accept="image/*">
+        </div>
+        <div class="editable-container">
+            <div class="editable-line" contenteditable="true"></div>
+            <div class="editable-line" contenteditable="true"></div>
+            <div class="editable-line" contenteditable="true"></div>
+            <div class="editable-line" contenteditable="true"></div>
+            <div class="editable-line" contenteditable="true"></div>
+            <div class="editable-line" contenteditable="true"></div>
+            <div class="editable-line" contenteditable="true"></div>
+        </div>
+
+        <div class="editable-container1">
+            <div class="editable-line1" contenteditable="true"></div>
+            <div class="editable-line1" contenteditable="true"></div>
+            <div class="editable-line1" contenteditable="true"></div>
+        </div>
+
+        <div class="editable-container2">
+            <div class="editable-line2" contenteditable="true"></div>
+            <div class="editable-line2" contenteditable="true"></div>
+            <div class="editable-line2" contenteditable="true"></div>
+            <div class="editable-line2" contenteditable="true"></div>
+            <div class="editable-line2" contenteditable="true"></div>
+        </div>
+
+        <div class="editable-container3">
+            <div class="editable-line3" contenteditable="true"></div>
+            <div class="editable-line3" contenteditable="true"></div>
+            <div class="editable-line3" contenteditable="true"></div>
+            <div class="editable-line3" contenteditable="true"></div>
+        </div>
+
+        <div class="editable-container4">
+            <div class="editable-line4" contenteditable="true"></div>
+            <div class="editable-line4" contenteditable="true"></div>
+            <div class="editable-line4" contenteditable="true"></div>
+            <div class="editable-line4" contenteditable="true"></div>
+        </div>
+
+        <div class="editable-container5">
+            <div class="editable-line5" contenteditable="true"></div>
+            <div class="editable-line5" contenteditable="true"></div>
+            <div class="editable-line5" contenteditable="true"></div>
+        </div>
+
+        <div class="editable-container6">
+            <div class="editable-line6" contenteditable="true"></div>
+            <div class="editable-line6" contenteditable="true"></div>
+            <div class="editable-line6" contenteditable="true"></div>
+        </div>
+
+        <div class="editable-container7">
+            <div class="editable-line7" contenteditable="true"></div>
+            <div class="editable-line7" contenteditable="true"></div>
+            <div class="editable-line7" contenteditable="true"></div>
+            <div class="editable-line7" contenteditable="true"></div>
+        </div>
+
+        <div class="editable-container8">
+            <div class="editable-line8" contenteditable="true"></div>
+            <div class="editable-line8" contenteditable="true"></div>
+            <div class="editable-line8" contenteditable="true"></div>
+            <div class="editable-line8" contenteditable="true"></div>
+        </div>
+
+        <div class="editable-container9">
+            <div class="editable-line9" contenteditable="true"></div>
+            <div class="editable-line9" contenteditable="true"></div>
+            <div class="editable-line9" contenteditable="true"></div>
+            <div class="editable-line9" contenteditable="true"></div>
+        </div>
+
+        <div class="editable-container10">
+            <div class="editable-line10" contenteditable="true"></div>
+            <div class="editable-line10" contenteditable="true"></div>
         </div>
     </div>
     <img class="line-image" src="선.png" alt="이미지 설명">
@@ -95,6 +291,25 @@
         document.querySelector('.upload-btn').addEventListener('click', function() {
             document.getElementById('image-upload').click();
         });
+
+        /*이건 텍스트가 줄바꿈이 동시에 적용안되서 추가한 것*/
+        function handleInputEvent(event) {
+            const line = event.target;
+            const lines = document.querySelectorAll('.editable-line, .editable-line1, .editable-line2, .editable-line3,.editable-line4,.editable-line5,.editable-line6,.editable-line7,.editable-line8,.editable-line9,.editable-line10');
+            const index = Array.from(lines).indexOf(line);
+
+            if (line.scrollWidth > line.clientWidth) {
+                line.innerText = line.innerText.slice(0, -1);
+                if (index < lines.length - 1) {
+                    lines[index + 1].focus();
+                }
+            }
+        }
+
+        document.querySelectorAll('.editable-line, .editable-line1, .editable-line2,.editable-line3,.editable-line4,.editable-line5,.editable-line6,.editable-line7,.editable-line8,.editable-line9,.editable-line10').forEach(line => {
+            line.addEventListener('input', handleInputEvent);
+        });
     </script>
 </body>
 </html>
+
