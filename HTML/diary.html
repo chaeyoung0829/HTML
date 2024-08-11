@@ -443,41 +443,36 @@
    
     
     
-  <!-- 스크립트 -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.8.0/pikaday.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.8.0/css/pikaday.min.css">
- 
+
     <script>
         // JavaScript 코드
-        const imageUpload = document.getElementById('image-upload');
+       const imageUpload = document.getElementById('image-upload');
         const displayImage = document.getElementById('display-image');
         const editableLines = document.querySelectorAll('.editable-line, .editable-line1, .editable-line2,.editable-line3,.editable-line4,.editable-line5,.editable-line6,.editable-line7,.editable-line8,.editable-line9,.editable-line10');
         const saveBtn = document.querySelector('.save-btn');
         const saveMessage = document.getElementById('save-message');
         const datePicker = document.getElementById('birthday');
+        const moveBtn = document.querySelector('.move-btn'); // 이동 버튼 선택
         const dateImage = document.getElementById('date-image');
-        const calendarContainer = document.getElementById('calendar-container');
-        const calendarElement = document.getElementById('calendar');
 
         let currentDate = '';
 
         imageUpload.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    displayImage.src = e.target.result;
-                }
-                reader.readAsDataURL(file);
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                displayImage.src = e.target.result;
             }
-        });
+            reader.readAsDataURL(file);
+        }
+    });
 
         document.querySelector('.upload-btn').addEventListener('click', function() {
             imageUpload.click();
         });
 
-        datePicker.addEventListener('change', function() {
+         datePicker.addEventListener('change', function() {
             currentDate = datePicker.value;
             if (currentDate) {
                 renderDateToCanvas(currentDate); // 날짜를 이미지로 렌더링
@@ -495,20 +490,14 @@
             }
         });
 
-        document.querySelector('.move-btn').addEventListener('click', function() {
-            const datePicker = document.getElementById('birthday');
-            let currentDate = new Date(datePicker.value);
-
-            // 날짜를 하루씩 증가
-            currentDate.setDate(currentDate.getDate() + 1);
-
-            // 새로운 날짜를 yyyy-mm-dd 형식으로 변환
-            const newDate = currentDate.toISOString().split('T')[0];
-
-            // datePicker와 캔버스 업데이트
-            datePicker.value = newDate;
-            renderDateToCanvas(newDate); // 날짜를 이미지로 렌더링
-            updateImageFromCanvas();     // 캔버스 이미지를 업데이트
+        moveBtn.addEventListener('click', function() {
+            const selectedDate = datePicker.value;
+            if (selectedDate) {
+                currentDate = selectedDate;
+                loadDiary(currentDate);
+            } else {
+                alert('날짜를 선택해주세요.');
+            }
         });
 
         function saveDiary(date) {
@@ -539,69 +528,13 @@
             displayImage.src = '#';
         }
 
-        function renderDateToCanvas(date) {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            const dateString = formatDate(date); // 날짜를 문자열로 포맷팅
-
-            canvas.width = 300; // 원하는 캔버스 크기
-            canvas.height = 150;
-
-            ctx.fillStyle = '#FFFFFF';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.fillStyle = '#000000';
-            ctx.font = '24px Arial';
-            ctx.fillText(dateString, 50, 80);
-
-            // 이미지 업데이트
-            const imageUrl = canvas.toDataURL('image/png');
-            dateImage.src = imageUrl;
-        }
-
-        function updateImageFromCanvas() {
-            // 캔버스의 이미지를 업데이트
-            // 이 부분은 위의 renderDateToCanvas에서 자동으로 처리됨
-        }
-
-        function formatDate(date) {
-            const [year, month, day] = date.split('-');
-            return `${year}년 ${month}월 ${day}일`;
-        }
-
-        // 달력 표시 버튼 클릭 시
-        document.querySelector('.show-calendar-btn').addEventListener('click', function() {
-            calendarContainer.style.display = 'block';
-            const picker = new Pikaday({
-                field: datePicker,
-                onSelect: function(date) {
-                    const selectedDate = new Date(date);
-                    datePicker.value = selectedDate.toISOString().split('T')[0];
-                    renderDateToCanvas(datePicker.value);
-                    updateImageFromCanvas();
-                    calendarContainer.style.display = 'none';
-                }
-            });
-        });
-
-        // 캘린더를 이미지로 캡쳐하여 표시하기
-        function captureCalendar() {
-            html2canvas(calendarElement).then(canvas => {
-                const dataUrl = canvas.toDataURL();
-                dateImage.src = dataUrl;
-            });
-        }
-
         // 페이지가 로드될 때 초기화
         window.addEventListener('load', function() {
             currentDate = datePicker.value;
             if (currentDate) {
                 loadDiary(currentDate);
-                renderDateToCanvas(currentDate); // 페이지 로드 시 날짜 이미지 렌더링
-                updateImageFromCanvas();
             }
         });
-       
 
 
     </script>
