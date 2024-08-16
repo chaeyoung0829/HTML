@@ -1,11 +1,118 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>스티커 기능 구현</title>
+    <style>
+        .sticker-container {
+            position: relative;
+            text-align: center;
+           
+        }
+
+        #sticker-area {
+            position: relative;
+            top: -100px;
+            left: 75%;
+            width: 300px;
+            height: 300px;
+            border: 1px solid #ddd;
+            margin-top: 30%;
+            overflow: hidden;
+            background-color: #f0f0f0;
+            
+        }
+        .sticker-btn {
+            position: absolute; /* 스티커 영역을 기준으로 절대 위치 설정 */
+            top: -140px;    /* 스티커 영역 상단에서 10px 떨어진 위치 */
+            padding: 10px 10px;
+            background-color: #a252c4a2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 11px;
+        }
+
+        .sticker {
+            position: absolute;
+            max-width: 70px;
+            max-height: 70px;
+            cursor: default; /* 스티커 고정 상태로 드래그 불가 */
+        }
+
+        .sticker-btn:nth-of-type(1) {
+            left: 79%; /* 첫 번째 버튼 왼쪽 위치 설정 */
+        }
+
+        .sticker-btn:nth-of-type(2) {
+            left: 87%; /* 두 번째 버튼 오른쪽으로 이동 */
+        }
+
+
+    </style>
 </head>
 <body>
-    HELLO!
+    <div class="sticker-container">
+        <button class="sticker-btn" id="sticker-btn">스티커 추가하기</button>
+        <button class="sticker-btn" id="sticker-btn">붙이기</button>
+
+        <input type="file" id="sticker-upload" style="display: none;">
+        <div id="sticker-area">
+            <!-- 추가된 스티커들이 여기 표시됩니다 -->
+        </div>
+    </div>
+
+    <script>
+        const stickerBtn = document.getElementById('sticker-btn');
+        const stickerUpload = document.getElementById('sticker-upload');
+        const stickerArea = document.getElementById('sticker-area');
+
+        let stickerOffsetX = 10; // 스티커의 X축 위치를 관리하는 변수
+        let stickerOffsetY = 0; // 스티커의 Y축 위치를 관리하는 변수
+        const stickerWidth = 50; // 스티커 가로 크기
+        const stickerHeight = 50; // 스티커 세로 크기
+        const margin = 20; // 스티커 간의 간격
+
+        // 스티커 추가하기 버튼 클릭 시 파일 선택 창 열기
+        stickerBtn.addEventListener('click', () => {
+            stickerUpload.click();
+        });
+
+        // 파일 선택 시 스티커 추가
+        stickerUpload.addEventListener('change', () => {
+            const file = stickerUpload.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'sticker';
+
+                    // 스티커가 스티커 영역의 오른쪽 끝에 도달하면 다음 줄로 이동
+                    if (stickerOffsetX + stickerWidth > stickerArea.offsetWidth) {
+                        stickerOffsetX = 10; // X 위치를 왼쪽으로 리셋
+                        stickerOffsetY += stickerHeight + margin; // Y 위치를 아래로 이동
+                    }
+
+                    // 스티커 영역을 벗어나지 않도록 제한
+                    if (stickerOffsetY + stickerHeight > stickerArea.offsetHeight) {
+                        alert('더 이상 스티커를 추가할 공간이 없습니다.');
+                        return;
+                    }
+
+                    // 스티커 위치 설정
+                    img.style.top = `${stickerOffsetY}px`; // Y 위치
+                   
+                    img.style.left = `${stickerOffsetX}px`; // X 위치
+                    stickerArea.appendChild(img);
+
+                    // X 위치를 스티커 너비만큼 이동
+                    stickerOffsetX += stickerWidth + margin;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
 </body>
 </html>

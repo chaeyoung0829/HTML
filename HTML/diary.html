@@ -241,7 +241,7 @@
         z-index: 1; /* 버튼 텍스트 위에 표시 */
     }
 
-    .sticker-btn {
+    .copy-btn {
         background-color: white;
         color: black;
         padding: 15px 45px;
@@ -257,10 +257,10 @@
         padding-left: 10px; /* 왼쪽 패딩 추가 */
         padding-right: 50px; /* 오른쪽 패딩 유지 */
     }
-    .img-sticker {
+    .img-copy {
         position: absolute;
         top: 10.5%;
-        left: 92.5%;
+        left: 92%;
         width: 3%;
         object-fit: cover; /* 컨테이너를 채우면서 비율 유지 */
         transform: translateY(-50%); /* 수직 중앙 정렬 */
@@ -308,6 +308,67 @@
             top: 10%;
             left: 50%;
             transform: translateX(-50%);
+        }
+
+        .sticker1-container {
+            position: absolute;
+            text-align: center;
+           
+        }
+
+        #sticker1-area {
+            position: absolute;
+            top: -400px;
+            left: 1070px;
+            width: 400px;
+            height: 400px;
+            border: 1px solid #ddd;
+            margin-top: 30%;
+            overflow: hidden;
+            background-color: #f0f0f0;
+            overflow-y: auto; /*영역 다쓰면 밑으로 내릴 수 있도록 스크롤 바*/
+            
+        }
+
+        .sticker1-btn {
+            position: absolute; /* 스티커 영역을 기준으로 절대 위치 설정 */
+            top: -450px;    /* 스티커 영역 상단에서 10px 떨어진 위치 */
+            padding: 10px 10px;
+            background-color: #a252c4a2;
+            width: 120px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* 색상 변경 시 부드러운 전환 효과 */
+        }
+
+        /* 마우스를 버튼 위에 올렸을 때 */
+        .sticker1-btn:hover {
+            background-color: #c11e70c6; /* 진한 핑크 색상 */
+        }
+
+        .sticker1 {
+            position: absolute;
+            max-width: 30px;
+            max-height: 30px;
+            object-fit: contain;
+            cursor: pointer; /* 스티커 고정 상태로 드래그 불가 */
+
+        }
+
+        .sticker1-btn:nth-of-type(1) {
+            left: 1130px; /* 첫 번째 버튼 왼쪽 위치 설정 */
+        }
+
+        .sticker1-btn:nth-of-type(2) {
+            left: 1300px; /* 두 번째 버튼 오른쪽으로 이동 */
+        }
+
+         /* 선택된 스티커에 대한 스타일 */
+        .selected {
+            border: 2px solid #a252c4a2; /* 선택된 이미지를 감싸는 테두리 */
         }
 
     </style>
@@ -406,8 +467,8 @@
     <img class="img-previous" src="previos button.png">
     <a href="main.html" class="previous-btn">이전</a>
 
-    <button class="sticker-btn">스티커</button>
-    <img class="img-sticker" src="sticker.png">
+    <button class="copy-btn">출처</button>
+    <img class="img-copy" src="sticker.png">
 
     <!-- 달력 표시용 컨테이너 -->
     <div id="calendar-container" class="calendar-container">
@@ -421,12 +482,21 @@
     </div>
  
     <button class="move-btn">이동</button>
-    <img id="date-image" src="" alt="날짜 이미지">  <!-- 날짜 이미지를 표시할 이미지 태그 추가 -->
  
      <!-- 저장 완료 메시지 (정중앙에 표시)-->
      <div id="save-message" style="display:none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #d4edda; color: #155724; padding: 10px 20px; border-radius: 5px; z-index: 1000;">
          저장되었습니다!
      </div>
+
+     <div class="sticker1-container">
+        <button class="sticker1-btn" id="sticker1-btn">스티커 추가하기</button>
+        <button class="sticker1-btn" id="sticker1-btn">붙이기</button>
+
+        <input type="file" id="sticker1-upload" style="display: none;">
+        <div id="sticker1-area">
+            <!-- 추가된 스티커들이 여기 표시됩니다 -->
+        </div>
+    </div>
  
 
        <!--출처표시하기
@@ -434,7 +504,8 @@
      <a target="_blank" href="https://icons8.com/icon/67555/favorite">하트</a> 작가: <a target="_blank" href="https://icons8.com">Icons8</a>
      <a  href="https://icons8.com/icon/rhjwSu93oV2L/이전">이전</a> icon by <a href="https://icons8.com">Icons8</a>
      <a target="_blank" href="https://icons8.com/icon/77121/online-store">저장</a> 작가: <a target="_blank" href="https://icons8.com">Icons8</a>
-    -->
+    <a target="_blank" href="https://icons8.com/icon/64007/umbrella">우산</a> 작가: <a target="_blank" href="https://icons8.com">Icons8</a>
+     -->
 
 
 
@@ -451,6 +522,18 @@
         const datePicker = document.getElementById('birthday');
         const moveBtn = document.querySelector('.move-btn'); // 이동 버튼 선택
         const dateImage = document.getElementById('date-image');
+        
+        //스티커 업로드
+        const sticker1Btn = document.getElementById('sticker1-btn');
+        const sticker1Upload = document.getElementById('sticker1-upload');
+        const sticker1Area = document.getElementById('sticker1-area');
+
+        let stickerOffsetX = 10; // 스티커의 X축 위치를 관리하는 변수
+        let stickerOffsetY = 0; // 스티커의 Y축 위치를 관리하는 변수
+        const stickerWidth = 10; // 스티커가 배치될 때의 공간 계산에 사용
+        const stickerHeight = 10; // 스티커 세로 크기
+        const margin = 120; // 스티커 간의 간격
+        let selectedSticker = null; // 현재 선택된 스티커를 저장하는 변수
 
         let currentDate = '';
 
@@ -541,6 +624,71 @@
                 }
             }
         }
+
+
+          // 스티커 추가하기 버튼 클릭 시 파일 선택 창 열기
+          sticker1Btn.addEventListener('click', () => {
+            sticker1Upload.click();
+        });
+
+        // 파일 선택 시 스티커 추가
+        sticker1Upload.addEventListener('change', () => {
+            const file = sticker1Upload.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'sticker';
+
+                     // 이미지 크기 제한을 위해 max-width 및 max-height 적용
+                    img.style.maxWidth = '120px';  // 스티커 영역의 너비를 넘지 않도록 제한
+                    img.style.maxHeight = '120px'; // 스티커 영역의 높이를 넘지 않도록 제한
+                    img.style.position = 'absolute';
+
+                    // 스티커가 스티커 영역의 오른쪽 끝에 도달하면 다음 줄로 이동
+                    if (stickerOffsetX + stickerWidth > sticker1Area.offsetWidth) {
+                        stickerOffsetX = 10; // X 위치를 왼쪽으로 리셋
+                        stickerOffsetY += stickerHeight + margin; // Y 위치를 아래로 이동
+                    }
+
+                    // 스티커 영역을 벗어나지 않도록 제한
+                    if (stickerOffsetY + stickerHeight > sticker1Area.offsetHeight) {
+                        alert('더 이상 스티커를 추가할 공간이 없습니다.');
+                        return;
+                    }
+
+                    // 스티커 위치 설정
+                    img.style.top = `${stickerOffsetY}px`; // Y 위치
+                   
+                    img.style.left = `${stickerOffsetX}px`; // X 위치
+                    sticker1Area.appendChild(img);
+
+                    // X 위치를 스티커 너비만큼 이동
+                    stickerOffsetX += stickerWidth + margin;
+
+
+                    // 스티커 클릭 시 선택/해제 처리
+                    img.addEventListener('click', function() {
+                        // 기존 선택된 스티커가 있으면 선택 해제
+                        if (selectedSticker) {
+                            selectedSticker.classList.remove('selected');
+                        }
+
+                        // 현재 선택된 스티커가 클릭된 스티커와 다르면 새로 선택
+                        if (selectedSticker !== img) {
+                            img.classList.add('selected');
+                            selectedSticker = img;
+                        } else {
+                            // 동일한 스티커를 다시 클릭하면 선택 해제
+                            selectedSticker = null;
+                        }
+                    });
+                    
+                    };
+                reader.readAsDataURL(file);
+            }
+        });
 
         document.querySelectorAll('.editable-line, .editable-line1, .editable-line2,.editable-line3,.editable-line4,.editable-line5,.editable-line6,.editable-line7,.editable-line8,.editable-line9,.editable-line10').forEach(line => {
             line.addEventListener('input', handleInputEvent);
