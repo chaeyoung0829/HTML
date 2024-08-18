@@ -371,6 +371,39 @@
             border: 2px solid #a252c4a2; /* 선택된 이미지를 감싸는 테두리 */
         }
 
+        .fullscreen-sticker-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: inline-block;
+            z-index: 1000;
+        }
+
+        .fullscreen-sticker {
+            max-width: 80%;  /* 스티커 최대 크기 */
+            max-height: 80%;
+            width: auto;     /* 비율에 맞게 너비 자동 조정 */
+            height: auto;    /* 비율에 맞게 높이 자동 조정 */
+            z-index: 1000;
+            cursor: grab;
+            position: relative;
+        
+        }
+
+        .resize-button {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: se-resize; /* 마우스 모양을 크기 조정 아이콘으로 변경 */
+            user-select: none;
+        }
+
+
     </style>
 </head>
 <body>
@@ -490,13 +523,20 @@
 
      <div class="sticker1-container">
         <button class="sticker1-btn" id="sticker1-btn">스티커 추가하기</button>
-        <button class="sticker1-btn" id="sticker1-btn">붙이기</button>
+        <button class="sticker1-btn" id="stick-image-btn">붙이기</button>
 
         <input type="file" id="sticker1-upload" style="display: none;">
         <div id="sticker1-area">
             <!-- 추가된 스티커들이 여기 표시됩니다 -->
         </div>
     </div>
+
+    <div class="fullscreen-sticker-container" style="display: none;">
+        <img id="fullscreen-sticker" class="fullscreen-sticker" src="#" alt="스티커 이미지">
+        <div id="resize-button" class="resize-button">⤡</div>
+    </div>
+    
+    
  
 
        <!--출처표시하기
@@ -527,15 +567,27 @@
         const sticker1Btn = document.getElementById('sticker1-btn');
         const sticker1Upload = document.getElementById('sticker1-upload');
         const sticker1Area = document.getElementById('sticker1-area');
+        const stickImageBtn = document.getElementById('stick-image-btn');
 
         let stickerOffsetX = 10; // 스티커의 X축 위치를 관리하는 변수
         let stickerOffsetY = 0; // 스티커의 Y축 위치를 관리하는 변수
         const stickerWidth = 10; // 스티커가 배치될 때의 공간 계산에 사용
         const stickerHeight = 10; // 스티커 세로 크기
         const margin = 120; // 스티커 간의 간격
+
         let selectedSticker = null; // 현재 선택된 스티커를 저장하는 변수
 
         let currentDate = '';
+
+        const fullscreenStickerContainer = document.querySelector('.fullscreen-sticker-container');
+        const fullscreenSticker = document.getElementById('fullscreen-sticker');
+        const resizeButton = document.getElementById('resize-button');
+        let isResizing = false;
+        let isDragging = false;
+        let initialMouseX, initialMouseY;
+        let initialWidth, initialHeight;
+        let offsetX = 0;
+        let offsetY = 0;
 
 
         document.getElementById('image-upload').addEventListener('change', function(event) {
@@ -689,6 +741,88 @@
                 reader.readAsDataURL(file);
             }
         });
+
+            // 붙이기 버튼 클릭 시 전체 화면 중앙에 이미지 배치
+            stickImageBtn.addEventListener('click', () => {
+            if (selectedSticker) {
+                selectedSticker.classList.remove('selected');
+                const fullscreenSticker = selectedSticker.cloneNode(); // 선택된 스티커를 복사
+                fullscreenSticker.classList.add('fullscreen-sticker');
+                document.body.appendChild(fullscreenSticker);
+
+                 // 중앙에 스티커 배치
+                fullscreenSticker.style.position = 'fixed';
+                fullscreenSticker.style.top = '50%';
+                fullscreenSticker.style.left = '50%';
+                
+                
+                // 이미지 이동 가능하게 설정
+                makeDraggable(fullscreenSticker);
+            } else {
+                alert('이미지를 선택해주세요.');
+            }
+        });
+
+        // 이미지 드래그 가능하게 설정
+        function makeDraggable(element) {
+            let isDragging = false;
+            let offsetX = 0;
+            let offsetY = 0;
+
+            element.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                offsetX = e.clientX - element.getBoundingClientRect().left;
+                offsetY = e.clientY - element.getBoundingClientRect().top;
+                element.style.cursor = 'grabbing';
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    element.style.left = `${e.clientX - offsetX}px`;
+                    element.style.top = `${e.clientY - offsetY}px`;
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+                element.style.cursor = 'grab';
+            });
+        }
+
+        // 버튼을 누를 때 크기 조절 모드 활성화
+        resizeButton.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            initialMouseX = e.clientX;
+            initialMouseY = e.clientY;
+            initialWidth = fullscreenSticker.offsetWidth;
+            initialHeight = fullscreenSticker.offsetHeight;
+
+            // 드래그 시작 시 기본 행동 방지
+            e.preventDefault();
+        });
+
+        // 마우스를 움직이면 이미지 크기 조정
+        document.addEventListener('mousemove', (e) => {
+            if (isResizing) {
+                const deltaX = e.clientX - initialMouseX;
+                const deltaY = e.clientY - initialMouseY;
+
+                // 비율에 맞게 이미지 크기 조정 (원하는 비율로 조절 가능)
+                const newWidth = initialWidth + deltaX;
+                const newHeight = initialHeight + deltaY;
+
+                fullscreenSticker.style.width = `${newWidth}px`;
+                fullscreenSticker.style.height = `${newHeight}px`;
+            }
+        });
+
+        // 버튼을 놓으면 크기 조절 모드 비활성화
+        document.addEventListener('mouseup', () => {
+            isResizing = false;
+        });
+
+
+
 
         document.querySelectorAll('.editable-line, .editable-line1, .editable-line2,.editable-line3,.editable-line4,.editable-line5,.editable-line6,.editable-line7,.editable-line8,.editable-line9,.editable-line10').forEach(line => {
             line.addEventListener('input', handleInputEvent);
