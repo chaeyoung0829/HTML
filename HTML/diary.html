@@ -381,26 +381,18 @@
         }
 
         .fullscreen-sticker {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             max-width: 80%;  /* 스티커 최대 크기 */
             max-height: 80%;
             width: auto;     /* 비율에 맞게 너비 자동 조정 */
             height: auto;    /* 비율에 맞게 높이 자동 조정 */
             z-index: 1000;
             cursor: grab;
-            position: relative;
-        
-        }
-
-        .resize-button {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            background-color: #007bff;
-            color: white;
-            padding: 10px;
-            border-radius: 50%;
-            cursor: se-resize; /* 마우스 모양을 크기 조정 아이콘으로 변경 */
-            user-select: none;
+            display: block;  /* 혹시나 inline-block이 문제라면 명확하게 block 설정 */
+            /*box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* 중앙 이미지에 그림자 추가 (선택 사항) */
         }
 
 
@@ -530,13 +522,6 @@
             <!-- 추가된 스티커들이 여기 표시됩니다 -->
         </div>
     </div>
-
-    <div class="fullscreen-sticker-container" style="display: none;">
-        <img id="fullscreen-sticker" class="fullscreen-sticker" src="#" alt="스티커 이미지">
-        <div id="resize-button" class="resize-button">⤡</div>
-    </div>
-    
-    
  
 
        <!--출처표시하기
@@ -578,16 +563,6 @@
         let selectedSticker = null; // 현재 선택된 스티커를 저장하는 변수
 
         let currentDate = '';
-
-        const fullscreenStickerContainer = document.querySelector('.fullscreen-sticker-container');
-        const fullscreenSticker = document.getElementById('fullscreen-sticker');
-        const resizeButton = document.getElementById('resize-button');
-        let isResizing = false;
-        let isDragging = false;
-        let initialMouseX, initialMouseY;
-        let initialWidth, initialHeight;
-        let offsetX = 0;
-        let offsetY = 0;
 
 
         document.getElementById('image-upload').addEventListener('change', function(event) {
@@ -712,7 +687,6 @@
 
                     // 스티커 위치 설정
                     img.style.top = `${stickerOffsetY}px`; // Y 위치
-                   
                     img.style.left = `${stickerOffsetX}px`; // X 위치
                     sticker1Area.appendChild(img);
 
@@ -742,20 +716,20 @@
             }
         });
 
-            // 붙이기 버튼 클릭 시 전체 화면 중앙에 이미지 배치
-            stickImageBtn.addEventListener('click', () => {
+           // 붙이기 버튼 클릭 시 전체 화면 중앙에 이미지 배치
+        stickImageBtn.addEventListener('click', () => {
             if (selectedSticker) {
                 selectedSticker.classList.remove('selected');
                 const fullscreenSticker = selectedSticker.cloneNode(); // 선택된 스티커를 복사
                 fullscreenSticker.classList.add('fullscreen-sticker');
                 document.body.appendChild(fullscreenSticker);
 
-                 // 중앙에 스티커 배치
+                // 중앙에 스티커 배치
                 fullscreenSticker.style.position = 'fixed';
                 fullscreenSticker.style.top = '50%';
                 fullscreenSticker.style.left = '50%';
-                
-                
+                fullscreenSticker.style.transform = 'translate(-50%, -50%)';
+
                 // 이미지 이동 가능하게 설정
                 makeDraggable(fullscreenSticker);
             } else {
@@ -788,40 +762,6 @@
                 element.style.cursor = 'grab';
             });
         }
-
-        // 버튼을 누를 때 크기 조절 모드 활성화
-        resizeButton.addEventListener('mousedown', (e) => {
-            isResizing = true;
-            initialMouseX = e.clientX;
-            initialMouseY = e.clientY;
-            initialWidth = fullscreenSticker.offsetWidth;
-            initialHeight = fullscreenSticker.offsetHeight;
-
-            // 드래그 시작 시 기본 행동 방지
-            e.preventDefault();
-        });
-
-        // 마우스를 움직이면 이미지 크기 조정
-        document.addEventListener('mousemove', (e) => {
-            if (isResizing) {
-                const deltaX = e.clientX - initialMouseX;
-                const deltaY = e.clientY - initialMouseY;
-
-                // 비율에 맞게 이미지 크기 조정 (원하는 비율로 조절 가능)
-                const newWidth = initialWidth + deltaX;
-                const newHeight = initialHeight + deltaY;
-
-                fullscreenSticker.style.width = `${newWidth}px`;
-                fullscreenSticker.style.height = `${newHeight}px`;
-            }
-        });
-
-        // 버튼을 놓으면 크기 조절 모드 비활성화
-        document.addEventListener('mouseup', () => {
-            isResizing = false;
-        });
-
-
 
 
         document.querySelectorAll('.editable-line, .editable-line1, .editable-line2,.editable-line3,.editable-line4,.editable-line5,.editable-line6,.editable-line7,.editable-line8,.editable-line9,.editable-line10').forEach(line => {
