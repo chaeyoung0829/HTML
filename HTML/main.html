@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main pages</title>
+    <style>
+        .image-container {
+            display: flex; /* 이미지 수평으로 배치 */
+            gap: 30px; /* 이미지 간의 간격 추가 */
+            justify-content: center;
+        }
+
+        .image-wrapper {
+            position: relative;
+            width: 50%; /* 이미지 너비 조정 */
+            overflow: hidden; /* 컨테이너 밖으로 나가는 부분 숨기기 */
+            object-fit: cover;
+        }
+
+        .image-wrapper img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .text-container {
+            display: flex;
+            width: 100%;
+            max-width: 1200px; /* 컨테이너의 최대 너비 설정 */
+            margin-bottom: 60px; /* 이미지와 텍스트 간의 간격 추가 */
+        }
+
+        .text1 {  
+            margin-left: 280px;   
+            font-size: 2rem;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .text2 {
+            position: relative;
+            left: 550px;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .image-wrapper:hover img {
+            transform: scale(1.1); /* 이미지 확대 */
+            box-shadow: 0 4px 8px rgba(106, 158, 187, 0.9);  /* 그림자 효과 */
+            opacity: 0.5; /* 이미지 어둡게 하기 */
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%; /*버튼 위치 설정*/
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* 반투명 검정색 오버레이 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0; /* 기본적으로 오버레이 숨기기 */
+            transition: opacity 0.3s ease; /* 오버레이 애니메이션 효과 */
+        }
+
+        .image-wrapper:hover .overlay {
+            opacity: 1; /* 이미지가 hover될 때 오버레이 나타나기 */
+        }
+
+        .overlay a {
+            background-color: rgba(49, 110, 81, 0.776); /* 버튼 배경색 */
+            color: white; /* 버튼 글자색 */
+            border: none; /* 버튼 테두리 제거 */
+            padding: 20px 40px; /* 버튼 안쪽 여백 */
+            text-align: center; /* 텍스트 중앙 정렬 */
+            display: inline-block; /* 인라인 블록 요소로 설정 */
+            font-size: 16px; /* 글자 크기 */
+            text-decoration: none; /* 링크 밑줄 제거 */
+            cursor: pointer; /* 마우스 커서 포인터로 변경 */
+            border-radius: 15px; /* 모서리 둥글게 */
+            transition: background-color 0.3s; /* 배경색 전환 효과 */
+        }
+
+        .overlay .button-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(121, 200, 162, 0.251);/* 버튼이 위치한 가로줄의 배경색 */
+            padding: 10px 0; /* 상하 여백 추가 */
+        }
+
+        .overlay a:hover {
+            background-color: rgba(42, 102, 79, 0.706); /* 호버 시 배경색 */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="text-container">
+            <h1 class="text1">다이어리 스케줄</h1>
+            <h1 class="text2">일기쓰기</h1>
+        </div>
+        <div class="image-container">
+            <div class="image-wrapper">
+                <img src="August.png" alt="8월 이미지">
+                <div class="overlay">
+                    <div class="button-container">
+                        <a href="schedule.html">스케줄 수정하러가기</a>
+                    </div>
+                </div>
+            </div>
+            <div class="image-wrapper">
+                <img src="일기 양식.jpg" alt="일기 양식 이미지">
+                <div class="overlay">
+                    <div class="button-container">
+                        <a href="diary.html">일기 수정하러가기</a>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
