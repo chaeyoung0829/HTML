@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Calendar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.8.0/css/pikaday.min.css">
+    <style>
+        /* 전체 스타일 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .editable-line {
+            margin: 10px 0;
+        }
+
+        /* 달력 섹션 스타일 */
+        .sec_cal {
+            width: 360px;
+            margin: 20px auto;
+            font-family: "NotoSansR";
+        }
+
+        .sec_cal .cal_nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 700;
+            font-size: 24px;
+            line-height: 36px;
+        }
+
+        .sec_cal .cal_nav .year-month {
+            width: 200px;
+            text-align: center;
+            line-height: 1;
+        }
+
+        .sec_cal .cal_nav .nav-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 50px;
+            height: 36px;
+            border-radius: 5px;
+            cursor: pointer;
+            user-select: none;
+            text-decoration: none;
+        }
+
+        .sec_cal .cal_nav .go-prev::before,
+        .sec_cal .cal_nav .go-next::before {
+            content: "";
+            display: block;
+            width: 15px;
+            height: 15px;
+            border: 2px solid #000;
+            border-width: 2px 2px 0 0;
+            transition: border 0.1s;
+        }
+
+        .sec_cal .cal_nav .go-prev::before {
+            transform: rotate(-135deg);
+        }
+
+        .sec_cal .cal_nav .go-next::before {
+            transform: rotate(45deg);
+        }
+
+        .sec_cal .cal_wrap {
+            padding-top: 20px;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .sec_cal .cal_wrap .days {
+            display: flex;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .sec_cal .cal_wrap .day {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: calc(100% / 7);
+            color: #999;
+            font-size: 14px;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .sec_cal .cal_wrap .dates {
+            display: flex;
+            flex-flow: wrap;
+            height: 240px;
+        }
+
+        .sec_cal .cal_wrap .day.this {
+            color: #000;
+        }
+
+        .sec_cal .cal_wrap .day.other {
+            color: #ddd;
+        }
+
+        .sec_cal .cal_wrap .day.today {
+            background-color: rgb(242, 242, 242);
+        }
+
+        /* 토요일은 파란색으로 */
+        .sec_cal .cal_wrap .day:nth-child(7n) {
+            color: #3c6ffa; 
+        }
+
+        /* 일요일은 빨간색으로 */
+        .sec_cal .cal_wrap .day:nth-child(7n+1) {
+            color: #ed2a61; 
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>2024 달력</h1>
+        
+        <!-- 달력 섹션 -->
+        <div class="sec_cal">
+            <div class="cal_nav">
+                <a href="javascript:;" class="nav-btn go-prev">prev</a>
+                <div class="year-month"></div>
+                <a href="javascript:;" class="nav-btn go-next">next</a>
+            </div>
+            <div class="cal_wrap">
+                <div class="days">
+                    <div class="day">SUN</div>
+                    <div class="day">MON</div>
+                    <div class="day">TUE</div>
+                    <div class="day">WED</div>
+                    <div class="day">THU</div>
+                    <div class="day">FRI</div>
+                    <div class="day">SAT</div>
+                </div>
+                <div class="dates"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const date = new Date();
+            const renderCalendar = () => {
+                const viewYear = date.getFullYear();
+                const viewMonth = date.getMonth();
+
+                // year-month 텍스트를 채움
+                document.querySelector('.year-month').textContent = `${viewYear}년 ${viewMonth + 1}월`;
+
+                // 지난 달의 마지막 날짜와 이번 달의 첫 번째 날짜
+                const prevLast = new Date(viewYear, viewMonth, 0);
+                const thisLast = new Date(viewYear, viewMonth + 1, 0);
+
+                const PLDate = prevLast.getDate();
+                const PLDay = prevLast.getDay();
+
+                const TLDate = thisLast.getDate();
+                const TLDay = thisLast.getDay();
+
+                // 날짜 배열을 초기화
+                const prevDates = [];
+                const thisDates = [...Array(TLDate + 1).keys()].slice(1);
+                const nextDates = [];
+
+                // 이전 달 날짜를 계산
+                if (PLDay !== 6) {
+                    for (let i = 0; i < PLDay + 1; i++) {
+                        prevDates.unshift(PLDate - i);
+                    }
+                }
+
+                // 다음 달 날짜를 계산
+                for (let i = 1; i < 7 - TLDay; i++) {
+                    nextDates.push(i);
+                }
+
+                // 모든 날짜를 합침
+                const dates = prevDates.concat(thisDates, nextDates);
+
+                // dates의 일수를 나눠서 배열을 재구성
+                const firstDateIndex = dates.indexOf(1);
+                const lastDateIndex = dates.lastIndexOf(TLDate);
+
+                dates.forEach((date, i) => {
+                    const condition = i >= firstDateIndex && i < lastDateIndex + 1
+                        ? 'this'
+                        : 'other';
+
+                    dates[i] = `<div class="day ${condition}" data-date="${viewYear}-${viewMonth + 1}-${date}">${date}</div>`;
+                });
+
+                document.querySelector('.dates').innerHTML = dates.join('');
+
+                // 오늘 날짜 표시
+                const today = new Date();
+                if (viewMonth === today.getMonth() && viewYear === today.getFullYear()) {
+                    for (let date of document.querySelectorAll('.this')) {
+                        if (+date.innerText === today.getDate()) {
+                            date.classList.add('today');
+                            break;
+                        }
+                    }
+                }
+
+                // 날짜 클릭 시 부모 페이지로 메시지 전송
+                document.querySelectorAll('.day.this').forEach(day => {
+                    day.addEventListener('click', function() {
+                        const selectedDate = this.getAttribute('data-date');
+                        window.parent.postMessage({ date: selectedDate }, '*');
+                    });
+                });
+            };
+
+            renderCalendar();
+
+            // 이전 달로 이동
+            document.querySelector('.go-prev').addEventListener('click', () => {
+                date.setMonth(date.getMonth() - 1);
+                renderCalendar();
+            });
+
+            // 다음 달로 이동
+            document.querySelector('.go-next').addEventListener('click', () => {
+                date.setMonth(date.getMonth() + 1);
+                renderCalendar();
+            });
+        });
+    </script>
+</body>
+</html>

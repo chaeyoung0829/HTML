@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이미지 예제</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        .center-container {
+            display: flex;
+            flex-direction: column; /* 수직 방향으로 정렬 */
+            justify-content: flex-start; /* 상단에 가까운 중앙으로 정렬 */
+            align-items: center;
+            height: 100vh; /* 화면 전체 높이 */
+            text-align: center;
+            padding-top: 180px; /* 상단 여백 추가 */
+            position: relative; /* 자식 요소에 절대 위치를 설정할 수 있도록 */
+        }
+
+        .center-container h1 {
+            margin-bottom: 20px; /* <h1>와 <h6> 사이의 간격을 줄입니다. */
+        }
+
+        .center-container h6 {
+            margin-top: 0; /* 기본 상단 여백 제거 */
+            margin-bottom: 100px; /* <h6>와 다른 요소 사이의 간격을 조정 */
+        }
+
+        .center-container img.cat {
+            position: absolute;
+            bottom: 180px; /* (이미지 위치 조정-크게하면 올라옴, px는 가장 작은 단위고 그냥 숫자로 하면 변동이 큼)*/
+            right: 20px;  /* 부모 요소의 오른쪽에 맞춤 */
+            width: 300px; /* 이미지의 너비 설정(이미지 자르는 역할) */
+            height: 400px; /* 이미지의 높이 설정 */
+            object-fit: cover; /* 이미지 비율 유지 */
+        }
+
+        .center-container img.tree {
+            position: absolute;
+            bottom: 180px; 
+            right: 1050px;  
+            width: 480px; 
+            height: 600px; 
+            object-fit: cover;
+        }
+        .center-container img.butterfly {
+            position: absolute;
+            bottom: 600px; 
+            right: 1000px;  
+            width: 240px; 
+            height: 200px; 
+            object-fit: cover;
+        }
+
+        .login-button {
+            background-color: #e160b0; /* 버튼 배경색 */
+            color: white; /* 버튼 글자색 */
+            border: none; /* 버튼 테두리 제거 */
+            padding: 10px 20px; /* 버튼 안쪽 여백 */
+            text-align: center; /* 텍스트 중앙 정렬 */
+            display: inline-block; /* 인라인 블록 요소로 설정 */
+            font-size: 16px; /* 글자 크기 */
+            text-decoration: none;
+            margin: 5px; /* 외부 여백 */
+            cursor: pointer; /* 마우스 커서 포인터로 변경 */
+            border-radius: 15px; /* 모서리 둥글게 */
+            transition: background-color 0.5s; /* 배경색 전환 효과 */
+        }
+
+        .login-button:hover {
+            background-color: #ad5ada; /* 호버 시 배경색 */
+        }
+
+        /* 모달 스타일 */
+        .modal {
+            display: none; /* 기본적으로 모달을 숨김 */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 30% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 300px;
+            border-radius: 5px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal input[type="text"],
+        .modal input[type="password"],
+        .modal input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            border-radius: 5px;
+        }
+
+        .modal button {
+            background-color: #dc68bd;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        .modal button:hover {
+            background-color: #b361d6;
+        }
+    </style>
+</head>
+<body>
+    <div class="center-container">
+        <h1>나의 하루 일과</h1>
+        <h6>오늘부터 시작하자</h6>
+        <a href="#" class="login-button" id="loginBtn">로그인</a>
+        <a href="#" class="login-button" id="signupBtn">회원가입</a>
+        <img src="cat.png" alt="설명 텍스트" class="cat">
+        <img src="tree.png" alt="설명 텍스트" class="tree">
+        <img src="butterfly.png" alt="설명 텍스트" class="butterfly">
+    </div>
+
+    <!-- 로그인 모달 -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeLoginBtn">&times;</span>
+            <h2>로그인</h2>
+            <label for="uname"><b>아이디</b></label>
+            <input type="text" placeholder="아이디 입력" name="uname" required>
+
+            <label for="psw"><b>비밀번호</b></label>
+            <input type="password" placeholder="비밀번호 입력" name="psw" required>
+
+            <button type="submit" id="loginSubmit">로그인</button>
+        </div>
+    </div>
+
+    <!-- 회원가입 모달 -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeSignupBtn">&times;</span>
+            <h2>회원가입</h2>
+            <label for="email"><b>이메일</b></label>
+            <input type="email" placeholder="이메일 입력" name="email" required>
+
+            <label for="uname"><b>아이디</b></label>
+            <input type="text" placeholder="아이디 입력" name="uname" required>
+
+            <label for="psw"><b>비밀번호</b></label>
+            <input type="password" placeholder="비밀번호 입력" name="psw" required>
+
+            <button type="submit" id="signupSubmit">회원가입</button>
+        </div>
+    </div>
+
+    <script>
+        // 로그인 모달
+        var loginModal = document.getElementById("loginModal");
+        var loginBtn = document.getElementById("loginBtn");
+        var closeLoginBtn = document.getElementById("closeLoginBtn");
+        var loginSubmit = document.getElementById("loginSubmit");
+
+        // 회원가입 모달
+        var signupModal = document.getElementById("signupModal");
+        var signupBtn = document.getElementById("signupBtn");
+        var closeSignupBtn = document.getElementById("closeSignupBtn");
+        var signupSubmit = document.getElementById("signupSubmit");
+
+        // 로그인 버튼 클릭 시 모달 열기
+        loginBtn.onclick = function() {
+            loginModal.style.display = "flex";
+        }
+
+        // 회원가입 버튼 클릭 시 모달 열기
+        signupBtn.onclick = function() {
+            signupModal.style.display = "flex";
+        }
+
+        // 로그인 모달 닫기
+        closeLoginBtn.onclick = function() {
+            loginModal.style.display = "none";
+        }
+
+        // 회원가입 모달 닫기
+        closeSignupBtn.onclick = function() {
+            signupModal.style.display = "none";
+        }
+
+        // 모달 외부 클릭 시 모달 닫기
+        window.onclick = function(event) {
+            if (event.target == loginModal) {
+                loginModal.style.display = "none";
+            } else if (event.target == signupModal) {
+                signupModal.style.display = "none";
+            }
+        }
+
+        // 로그인 폼 제출 처리
+        loginSubmit.onclick = function(event) {
+            event.preventDefault(); // 폼 기본 제출 방지
+            alert("로그인되었습니다.");
+            window.location.href = "main.html"; // 새로운 페이지로 이동
+        }
+
+        // 회원가입 폼 제출 처리
+        signupSubmit.onclick = function(event) {
+            event.preventDefault(); // 폼 기본 제출 방지
+            alert("회원가입되었습니다.");
+            signupModal.style.display = "none"; // 회원가입 모달 닫기
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
